@@ -1,1 +1,1 @@
-# wanderlust
+# wanderlust project
