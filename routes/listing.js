@@ -16,7 +16,7 @@ router.get("/", wrapAsync(listingController.index));
 router.get("/new", isLoggedIn,listingController.renderNewForm);
 
 // Show Route
-router.get("/:id", validateId, wrapAsync,listingController.showListing);
+router.get("/:id", validateId, wrapAsync(listingController.showListing));
 
 
 // Create Route
