@@ -5,6 +5,7 @@
             <h3><%= listing.title %></h3>
         </div>
     </div>
+
     <div class="row">
         <div class="card col-8 offset-2 border-0 shadow-sm listing-card">
             <img src="<%= listing.image.url %>" class="card-img-top show-img" alt="listing-image">
@@ -21,20 +22,22 @@
             </div>
         </div>
     </div>
-    
-    <div class="row mt-4 mb-5">
-        <div class="col-8 offset-2 d-flex gap-3">
-            <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary">
-                <i class="fas fa-edit me-2"></i>Edit
-            </a>
-            
-            <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-                <button class="btn btn-danger custom-delete">
-                    <i class="fas fa-trash-alt me-2"></i>Delete
-                </button>
-            </form>
+
+    <% if (currentUser && currentUser._id.toString() === listing.owner._id.toString()) { %>
+        <div class="row mt-4 mb-5">
+            <div class="col-8 offset-2 d-flex gap-3">
+                <a href="/listings/<%= listing._id %>/edit" class="btn btn-primary">
+                    <i class="fas fa-edit me-2"></i>Edit
+                </a>
+                <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+                    <button class="btn btn-danger custom-delete">
+                        <i class="fas fa-trash-alt me-2"></i>Delete
+                    </button>
+                </form>
+            </div>
         </div>
-    </div>
+    <% } %>
+
     <div class="row mt-4 mb-5">
         <div class="col-8 offset-2">
             <hr>
@@ -42,7 +45,7 @@
             <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating:</label>
-                    <fieldset class="starability-slot ">
+                    <fieldset class="starability-slot">
                         <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
                         <input type="radio" id="first-rate1" name="review[rating]" value="1" />
                         <label for="first-rate1" title="Terrible">1 star</label>
@@ -54,16 +57,19 @@
                         <label for="first-rate4" title="Very good">4 stars</label>
                         <input type="radio" id="first-rate5" name="review[rating]" value="5" />
                         <label for="first-rate5" title="Amazing">5 stars</label>
-                      </fieldset>
+                    </fieldset>
                 </div>
+
                 <div class="mb-3">
                     <label for="comment" class="form-label">Comment:</label>
                     <textarea id="comment" name="review[comment]" cols="30" rows="5" class="form-control" required></textarea>
                     <div class="invalid-feedback">Do leave a comment for reviews</div>
                     <div class="valid-feedback">Thanks for sharing your views!</div>
                 </div>
+
                 <button class="btn btn-outline-dark">Submit</button>
             </form>
+
             <hr>
             <p><b>All Reviews!</b></p>
             <div class="row">
@@ -75,11 +81,13 @@
                             <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
                             <p class="card-text"><%= review.comment %></p>
                         </div>
-                        <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=Delete" class="mb-3" method="post">
-                            <button class="btn btn-sm btn-dark mt-3">Delete</button>
-                        </form>
+                        <% if (currentUser && currentUser._id.toString() === review.author._id.toString()) { %>
+                            <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="mb-3">
+                                <button class="btn btn-sm btn-dark mt-3">Delete</button>
+                            </form>
+                        <% } %>
                     </div>
-                <% } %>   
+                <% } %>
             </div>
         </div>
     </div>
