@@ -35,7 +35,9 @@ module.exports.editListing = async (req, res) => {
   const { id } = req.params;
   const listing = await Listing.findById(id);
   if (!listing) throw new ExpressError(404, "Listing not found!");
-  res.render("listings/edit.ejs", { listing });
+  let originalImage = listing.image.url;
+  originalImage = originalImage.replace("/upload","/upload/h_300,w_250");
+  res.render("listings/edit.ejs", { listing,originalImage });
 };
 
 module.exports.updateListing = async (req, res) => {
