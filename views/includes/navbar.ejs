@@ -5,52 +5,36 @@
     background-color: #fe424d;
     color: white;
     border-radius: 25px;
-    padding: 0 1rem;
+    padding: 0 1rem 0 1rem;
     border: none;
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
 
+  .search-btn:hover {
+    background-color: #fe424d;
+    color: #fff;
+  }
+
+  .search-btn i {
+    display: inline;
+    margin-right: 0.5rem;
+  }
+
   .search-inp {
     border-radius: 25px;
-    padding: 0.5rem 3rem;
-    border: 1px solid #ccc;
-    min-width: 300px; /* Makes the input wider */
+    padding: 0.5rem 3rem 0.5rem 3rem;
+    font-size: 0.8rem;
   }
 
-  .navbar {
-    background-color: #f8f9fa;
-  }
+  .bg-custom-color {
+    background-color: #ccc;
+}
 
-  .navbar-brand {
-    color: #333;
-    font-weight: bold;
-    font-size: 1.5rem;
-  }
-
-  .navbar-nav .nav-link {
-    color: #333;
-    margin-right: 10px;
-  }
-
-  .navbar-nav .nav-link:hover {
-    color: #fe424d;
-  }
-
-  .center-search {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  /* Make sure relative positioning is set up */
-  .navbar-collapse {
-    position: relative;
-  }
 </style>
 
-<nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-md bg-custom-color border-bottom sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
 
@@ -66,10 +50,10 @@
       </div>
 
       <!-- Center search -->
-      <div class="center-search">
+      <div class="navbar-nav ms-auto">
         <form class="d-flex" role="search">
-          <input class="form-control me-3 search-inp" type="search" placeholder="Search Destinations">
-          <button class="search-btn" type="submit">
+          <input class="form-control me-2 search-inp" type="search" placeholder="Search Destinations">
+          <button class="btn search-btn" type="submit">
             <i class="fa-solid fa-magnifying-glass"></i> Search
           </button>
         </form>
