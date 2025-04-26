@@ -52,9 +52,9 @@ const sessionOptions = {
 };
 
 // Root route
-app.get("/", (req, res) => {
-  res.send("Connection successful");
-});
+// app.get("/", (req, res) => {
+//   res.send("Connection successful");
+// });
 
 app.use(session(sessionOptions));
 app.use(flash());
