@@ -2,9 +2,20 @@ const Listing = require("../models/listing");
 
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
+  const { search } = req.query;
+  let listings;
+
+  if (search) {
+    listings = await Listing.find({
+      title: { $regex: search, $options: "i" }, 
+    });
+  } else {
+    listings = await Listing.find({});
+  }
+
+  res.render("listings/index", { listings, search: search || "" });
 };
+
 
 module.exports.renderNewForm = (req, res) => {
     res.render("listings/new.ejs");
@@ -100,11 +111,11 @@ module.exports.filterByCategory = async (req, res) => {
     const { category } = req.params;
 
     // Find listings where category matches (case-insensitive)
-    const allListings = await Listing.find({
+    const listings = await Listing.find({
       category: { $regex: new RegExp("^" + category + "$", "i") }
     });
 
-    res.render("listings/index.ejs", { allListings });
+    res.render("listings/index.ejs", { listings, search: "", category });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");
