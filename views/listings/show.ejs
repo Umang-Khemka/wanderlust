@@ -37,6 +37,19 @@
             </div>
         </div>
     <% } %>
+<% if (!listing.owner._id.equals(currentUser?._id)) { %>
+  <div class="row mt-4 mb-3">
+    <div class="col-8 offset-2">
+      <form action="/bookings/<%= listing._id %>/new" method="GET">
+        <button class="btn btn-success btn-lg w-50">
+          <i class="fas fa-calendar-check me-2"></i>Book Now
+        </button>
+      </form>
+    </div>
+  </div>
+<% } %>
+
+
 
     <div class="row mt-4 mb-5">
         <div class="col-8 offset-2">
