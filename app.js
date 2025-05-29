@@ -15,6 +15,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStratergy = require("passport-local");
 const User = require("./models/user.js");
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
 
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
@@ -77,10 +79,7 @@ const sessionOptions = {
   },
 };
 
-// Root route
-// app.get("/", (req, res) => {
-//   res.send("Connection successful");
-// });
+
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -89,8 +88,47 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStratergy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ googleId: profile.id });
+        if (!user) {
+          user = new User({
+            username: profile.emails[0].value,
+            email: profile.emails[0].value,
+            googleId: profile.id,
+          });
+          await user.save();
+        }
+        return done(null, user);
+      } catch (err) {
+        return done(err, null);
+      }
+    }
+  )
+);
+
+
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);  // serialize by Mongo _id
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (err) {
+    done(err, null);
+  }
+});
+
 
 app.use((req,res,next)=> {
   res.locals.success = req.flash("success");
@@ -99,9 +137,33 @@ app.use((req,res,next)=> {
   next();
 });
 
+// Root route
+app.get("/", (req, res) => {
+  res.render("home.ejs")
+});
+
+// Google OAuth routes
+app.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", { failureRedirect: "/" }),
+  (req, res) => {
+    // Successful login, redirect wherever you want
+    res.redirect("/listings");
+  }
+);
+
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/", userRouter);
+
+app.get("/bookings/:id/new", (req,res) => {
+  res.send("booking done");
+});
 
 
 // Fallback Route
