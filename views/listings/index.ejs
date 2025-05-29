@@ -98,11 +98,6 @@
   </style>
 
   <div id="filters">
-    <a href="/listings/filter/Trending" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-fire"></i></div>
-      <p>Trending</p>
-    </a>
-
     <a href="/listings/filter/Rooms" class="filter text-decoration-none text-dark">
       <div><i class="fa-solid fa-bed"></i></div>
       <p>Rooms</p>
@@ -155,9 +150,18 @@
       </div>
     </div>
   </div>
+  <% if (search) { %>
+  <h5 class="text-center mt-3">Results for "<%= search %>"</h5>
+  <% } %>
+
 
   <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
-    <% for(let listing of allListings) { %>
+    <% if(listings.length === 0) {%>
+      <div class="col">
+        <p class="text-center bold">No Listings found for "<%= search %>"</p>
+      </div>
+    <% } %>
+    <% for(let listing of listings) { %>
       <div class="col">
         <a href="/listings/<%= listing._id %>" class="listing-link">
           <div class="card listing-card">
