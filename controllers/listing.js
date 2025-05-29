@@ -20,15 +20,49 @@ module.exports.showListing = async (req, res) => {
   res.render("listings/show.ejs", { listing, currentUser: req.user });
 };
 
-module.exports.createListing = async (req, res) => {
-  let url = req.file.path;
-  let filename = req.file.filename;
-  const newListing = new Listing(req.body.listing);
-  newListing.owner = req.user._id;
-  newListing.image = {url,filename};
-  await newListing.save();
-  req.flash("success", "New listing created!");
-  res.redirect("/listings");
+module.exports.createListing = async (req, res, next) => {
+  try {
+    const { title, description, category, price, location, country } = req.body.listing;
+    
+    // Validate category first
+    const allowedCategories = [
+      "Rooms",
+      "Iconic Cities",
+      "Castles",
+      "Mountain Views",
+      "Camping",
+      "Amazing Nature",
+      "Farms",
+      "Arctic",
+      "Boats"
+    ];
+
+    if (!allowedCategories.includes(category)) {
+      req.flash("error", "Invalid category selected");
+      return res.redirect("/listings/new");
+    }
+
+    const newListing = new Listing({
+      title,
+      description,
+      category,
+      price,
+      location,
+      country,
+      owner: req.user._id,
+      image: {
+        url: req.file.path,
+        filename: req.file.filename
+      }
+    });
+
+    await newListing.save();
+    req.flash("success", "New listing created!");
+    res.redirect("/listings");
+  } catch (err) {
+    req.flash("error", err.message);
+    res.redirect("/listings/new");
+  }
 };
 
 module.exports.editListing = async (req, res) => {
@@ -60,3 +94,20 @@ module.exports.deleteListing = async (req, res) => {
   if (!deletedListing) throw new ExpressError(404, "Listing not found!");
   res.redirect("/listings");
 };
+
+module.exports.filterByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+
+    // Find listings where category matches (case-insensitive)
+    const allListings = await Listing.find({
+      category: { $regex: new RegExp("^" + category + "$", "i") }
+    });
+
+    res.render("listings/index.ejs", { allListings });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+};
+
