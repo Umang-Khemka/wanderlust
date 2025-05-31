@@ -17,22 +17,11 @@ const LocalStratergy = require("passport-local");
 const User = require("./models/user.js");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
-
-// const dbUrl = process.env.ATLASDB_URL;
-
-
-// main()
-//   .then(() => console.log("Connected to DB"))
-//   .catch((err) => console.log("Mongo Error:", err));
-
-// async function main() {
-//   await mongoose.connect(dbUrl);
-// }
-
+const bookmarkRouter = require("./routes/bookmark.js");
+const bookingRoutes = require("./routes/bookings");
 
 // MongoDB connection URL
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -55,31 +44,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// const store = MongoStore.create({
-//   mongoUrl:dbUrl,
-//   crypto: {
-//     secret: process.env.SECRET,
-//   },
-//   touchAfter: 24 * 3600,
-// });
-
-// store.on("error",() => {
-//   console.log("ERROR in MONGO_SESSION",err);
-// })
-
 const sessionOptions = {
-  // store,
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge:  7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
   },
 };
-
-
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -114,10 +88,8 @@ passport.use(
   )
 );
 
-
-
 passport.serializeUser((user, done) => {
-  done(null, user.id);  // serialize by Mongo _id
+  done(null, user.id);
 });
 
 passport.deserializeUser(async (id, done) => {
@@ -129,8 +101,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
-
-app.use((req,res,next)=> {
+app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.currUser = req.user;
@@ -139,7 +110,7 @@ app.use((req,res,next)=> {
 
 // Root route
 app.get("/", (req, res) => {
-  res.render("home.ejs")
+  res.render("home.ejs");
 });
 
 // Google OAuth routes
@@ -152,19 +123,16 @@ app.get(
   "/auth/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    // Successful login, redirect wherever you want
     res.redirect("/listings");
   }
 );
 
-app.use("/listings",listingRouter);
-app.use("/listings/:id/reviews",reviewRouter);
+// Routers
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-
-app.get("/bookings/:id/new", (req,res) => {
-  res.send("booking done");
-});
-
+app.use("/bookmarks", bookmarkRouter);
+app.use("/listings/:id/bookings", bookingRoutes); 
 
 // Fallback Route
 app.use((req, res, next) => {
