@@ -1,0 +1,37 @@
+<% layout("/layouts/boilerplate") %>
+
+<body>
+  <div class="container mt-4">
+    <h2 class="text-center mb-4">Your Bookmarked Listings</h2>
+
+    <% if (bookmarks.length === 0) { %>
+      <p class="text-center">You haven't bookmarked any listings yet.</p>
+    <% } else { %>
+      <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+        <% bookmarks.forEach(listing => { %>
+          <div class="col">
+            <div class="card h-100 border-0">
+              <% if (listing.image) { %>
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" style="height: 18rem; object-fit: cover;">
+              <% } else { %>
+                <img src="https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" class="card-img-top" alt="Default image" style="height: 18rem; object-fit: cover;">
+              <% } %>
+
+              <div class="card-body">
+                <h5 class="card-title"><%= listing.title %></h5>
+                <p class="card-text">₹ <%= listing.price.toLocaleString("en-IN") %> / night</p>
+                <a href="/listings/<%= listing._id %>" class="btn btn-primary">View Listing</a>
+
+                <form action="/bookmarks/<%= listing._id %>?_method=DELETE" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-outline-danger ms-2">
+                    <i class="fa-solid fa-bookmark"></i> Remove
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</body>
