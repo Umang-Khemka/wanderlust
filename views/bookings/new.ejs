@@ -33,6 +33,20 @@
         <p>₹1000 per night is charged.</p>
         <p>18% GST is applied on the base amount.</p>
       </div>
+
+      <!-- Refund Policy Button -->
+      <button type="button" class="btn btn-warning mb-3 w-100" onclick="toggleRefundPolicy()">View Refund Policy</button>
+
+      <!-- Refund Policy Text (Initially Hidden) -->
+      <div id="refundPolicy" class="alert alert-secondary" style="display: none;">
+        <h6>Refund Policy</h6>
+        <p>
+          Cancellations made at least 7 days before check-in will receive a full refund.<br>
+          Cancellations made within 7 days of check-in will receive a 50% refund.<br>
+          No refunds will be given for cancellations made on or after the check-in date.
+        </p>
+      </div>
+
       <button type="submit" class="btn btn-success w-100">✅ Confirm Booking</button>
     </div>
   </form>
@@ -86,4 +100,10 @@
     const el = document.getElementById("breakdown");
     el.style.display = el.style.display === "none" ? "block" : "none";
   }
+
+  function toggleRefundPolicy() {
+    const el = document.getElementById("refundPolicy");
+    el.style.display = el.style.display === "none" ? "block" : "none";
+  }
+  
 </script>
