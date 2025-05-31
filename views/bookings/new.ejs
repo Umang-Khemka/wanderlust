@@ -1,0 +1,89 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="container my-5">
+
+  <h2 class="mb-4 text-center">📅 Book Your Stay</h2>
+
+  <!-- Booking Form -->
+  <form action="/listings/<%= listing._id %>/bookings" method="POST" id="bookingForm">
+    <div class="mb-3">
+      <label for="bookingDate" class="form-label fw-bold">Select Check-in & Check-out Dates:</label>
+      <input type="text" id="bookingDate" name="bookingDate" class="form-control shadow-sm" placeholder="📆 Select date range" required readonly>
+      <div class="form-text text-muted">Unavailable dates are disabled.</div>
+      <input type="hidden" name="bookingNights" id="bookingNights">
+      <input type="hidden" name="totalPrice" id="totalPriceInput">
+    </div>
+
+    <!-- Message while selecting -->
+    <div id="loadingMessage" class="alert alert-info d-none">
+      Calculating your stay details...
+    </div>
+
+    <!-- Bill Section (Initially Hidden) -->
+    <div id="billSection" class="card mt-4 shadow-sm p-3" style="display: none;">
+      <h5 class="card-title">Booking Summary</h5>
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item">Total Nights: <strong><span id="nights">0</span></strong></li>
+        <li class="list-group-item">Base Price: ₹<strong><span id="basePrice">0.00</span></strong></li>
+        <li class="list-group-item">GST (18%): ₹<strong><span id="gst">0.00</span></strong></li>
+        <li class="list-group-item bg-light">Total: ₹<strong><span id="totalPrice">0.00</span></strong></li>
+      </ul>
+      <button type="button" class="btn btn-outline-secondary mb-2" onclick="toggleBreakdown()">View Breakdown</button>
+      <div id="breakdown" class="text-muted" style="display: none;">
+        <p>₹1000 per night is charged.</p>
+        <p>18% GST is applied on the base amount.</p>
+      </div>
+      <button type="submit" class="btn btn-success w-100">✅ Confirm Booking</button>
+    </div>
+  </form>
+</div>
+
+<!-- JS & Flatpickr Logic -->
+<script>
+  const bookedDates = <%- JSON.stringify(bookedDates || []) %>;
+  const pricePerNight = 1000;
+
+  flatpickr("#bookingDate", {
+    mode: "range",
+    dateFormat: "Y-m-d",
+    disable: bookedDates,
+    minDate: "today",
+    allowInput: false,
+    onChange: function (selectedDates) {
+      document.getElementById("loadingMessage").classList.remove("d-none");
+      setTimeout(() => {
+        calculateBill(selectedDates);
+        document.getElementById("loadingMessage").classList.add("d-none");
+      }, 2000); // simulate slight loading effect
+    }
+  });
+
+  function calculateBill(dates) {
+    if (dates.length === 2) {
+      let nights = Math.round((dates[1] - dates[0]) / (1000 * 60 * 60 * 24));
+      if (nights === 0) nights = 1;
+
+      const basePrice = nights * pricePerNight;
+      const gst = basePrice * 0.18;
+      const total = basePrice + gst;
+
+      // Update UI
+      document.getElementById("nights").innerText = nights;
+      document.getElementById("basePrice").innerText = basePrice.toFixed(2);
+      document.getElementById("gst").innerText = gst.toFixed(2);
+      document.getElementById("totalPrice").innerText = total.toFixed(2);
+      document.getElementById("billSection").style.display = "block";
+
+      // Set hidden form fields
+      document.getElementById("bookingNights").value = nights;
+      document.getElementById("totalPriceInput").value = total.toFixed(2);
+    } else {
+      document.getElementById("billSection").style.display = "none";
+    }
+  }
+
+  function toggleBreakdown() {
+    const el = document.getElementById("breakdown");
+    el.style.display = el.style.display === "none" ? "block" : "none";
+  }
+</script>
