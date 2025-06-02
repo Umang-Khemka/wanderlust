@@ -134,6 +134,14 @@ app.use("/", userRouter);
 app.use("/bookmarks", bookmarkRouter);
 app.use("/listings/:id/bookings", bookingRoutes); 
 
+app.get("/privacy",(req,res) => {
+  res.render("privacy.ejs");
+})
+
+app.get("/terms",(req,res)=> {
+  res.render("terms.ejs");
+})
+
 // Fallback Route
 app.use((req, res, next) => {
   throw new ExpressError(404, "Page Not Found!");
