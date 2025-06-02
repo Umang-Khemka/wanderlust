@@ -48,53 +48,6 @@
       display: flex;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 992px) {
-      #filters {
-        gap: 0.25rem;
-      }
-
-      .filter {
-        width: 4.5rem;
-        margin: 0.3rem;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .filter {
-        width: 4rem;
-      }
-
-      .filter i {
-        font-size: 1.3rem;
-      }
-
-      .filter p {
-        font-size: 0.75rem;
-      }
-
-      .tax-switch {
-        margin: 1rem auto;
-      }
-    }
-
-    @media (max-width: 576px) {
-      #filters {
-        justify-content: space-between;
-        padding: 0 1rem;
-      }
-
-      .filter {
-        width: 3.5rem;
-        margin: 0.2rem;
-      }
-
-      .tax-switch {
-        width: 100%;
-        justify-content: center;
-        margin-top: 1.5rem;
-      }
-    }
     .save-form {
       position: absolute;
       top: 10px;
@@ -115,99 +68,198 @@
     .save-btn:hover {
       background: #eee;
     }
+
+    .listing-card {
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .listing-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-img-top {
+      object-fit: cover;
+      height: 20rem;
+    }
+
+    @media (max-width: 1199.98px) {
+      .card-img-top {
+        height: 18rem;
+      }
+    }
+
+    @media (max-width: 991.98px) {
+      #filters {
+        gap: 0.25rem;
+      }
+
+      .filter {
+        width: 4.5rem;
+        margin: 0.3rem;
+      }
+
+      .card-img-top {
+        height: 16rem;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .filter {
+        width: 4rem;
+      }
+
+      .filter i {
+        font-size: 1.3rem;
+      }
+
+      .filter p {
+        font-size: 0.75rem;
+      }
+
+      .tax-switch {
+        margin: 1rem auto;
+      }
+
+      .card-img-top {
+        height: 14rem;
+      }
+    }
+
+    @media (max-width: 575.98px) {
+      #filters {
+        justify-content: space-between;
+        padding: 0 1rem;
+      }
+
+      .filter {
+        width: 3.5rem;
+        margin: 0.2rem;
+      }
+
+      .tax-switch {
+        width: 100%;
+        justify-content: center;
+        margin-top: 1.5rem;
+      }
+
+      .card-img-top {
+        height: 12rem;
+      }
+    }
   </style>
 
-  <div id="filters">
-    <a href="/listings/filter/Rooms" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-bed"></i></div>
-      <p>Rooms</p>
-    </a>
-
-    <a href="/listings/filter/Iconic Cities" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-mountain-city"></i></div>
-      <p>Iconic Cities</p>
-    </a>
-
-    <a href="/listings/filter/Castles" class="filter text-decoration-none text-dark">
-      <div><i class="fa-brands fa-fort-awesome"></i></div>
-      <p>Castles</p>
-    </a>
-
-    <a href="/listings/filter/Mountain Views" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-mountain-sun"></i></div>
-      <p>Mountain Views</p>
-    </a>
-
-    <a href="/listings/filter/Camping" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-tent"></i></div>
-      <p>Camping</p>
-    </a>
-
-    <a href="/listings/filter/Amazing Nature" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-person-swimming"></i></div>
-      <p>Amazing Nature</p>
-    </a>
-
-    <a href="/listings/filter/Farms" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-tractor"></i></div>
-      <p>Farms</p>
-    </a>
-
-    <a href="/listings/filter/Arctic" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-snowflake"></i></div>
-      <p>Arctic</p>
-    </a>
-
-    <a href="/listings/filter/Boats" class="filter text-decoration-none text-dark">
-      <div><i class="fa-solid fa-ship"></i></div>
-      <p>Boats</p>
-    </a>
-
-    <div class="tax-switch">
-      <div class="form-check-reverse form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Display Taxes</label>
-      </div>
-    </div>
-  </div>
-  <% if (search) { %>
-  <h5 class="text-center mt-3">Results for "<%= search %>"</h5>
-  <% } %>
-
-
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
-    <% if(listings.length === 0) {%>
-      <div class="col">
-        <p class="text-center bold">No Listings found for "<%= search %>"</p>
-      </div>
-    <% } %>
-    <% for(let listing of listings) { %>
-      <div class="col">
-        <a href="/listings/<%= listing._id %>" class="listing-link">
-          <div class="card listing-card position-relative">
-            <% if(listing.image) { %>
-              <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>" style="height: 20rem;">
-              <div class="card-img-overlay"></div>
-            <% } else { %>
-              <img src="https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" class="card-img-top" alt="Default image" style="height: 20rem;">
-            <% } %>
-            <form action="/bookmarks/<%= listing._id %>" method="post" class="save-form">
-              <button type="submit" class="save-btn">
-                <i class="<%= listing.bookmarked ? 'fa-solid' : 'fa-regular' %> fa-bookmark"></i>
-              </button>
-            </form>
-            <div class="card-img-overlay"></div>
-            <div class="card-body">
-              <p class="card-text">
-                <b><%= listing.title %></b><br>
-                &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
-                <i class="tax-info">&nbsp;+18% GST</i>
-              </p>
-            </div>
-          </div>
+  <div class="container-fluid">
+    <div id="filters" class="row justify-content-center">
+      <div class="col-auto">
+        <a href="/listings/filter/Rooms" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-bed"></i></div>
+          <p>Rooms</p>
         </a>
       </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Iconic Cities" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-mountain-city"></i></div>
+          <p>Iconic Cities</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Castles" class="filter text-decoration-none text-dark">
+          <div><i class="fa-brands fa-fort-awesome"></i></div>
+          <p>Castles</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Mountain Views" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-mountain-sun"></i></div>
+          <p>Mountain Views</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Camping" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-tent"></i></div>
+          <p>Camping</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Amazing Nature" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-person-swimming"></i></div>
+          <p>Amazing Nature</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Farms" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-tractor"></i></div>
+          <p>Farms</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Arctic" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-snowflake"></i></div>
+          <p>Arctic</p>
+        </a>
+      </div>
+
+      <div class="col-auto">
+        <a href="/listings/filter/Boats" class="filter text-decoration-none text-dark">
+          <div><i class="fa-solid fa-ship"></i></div>
+          <p>Boats</p>
+        </a>
+      </div>
+
+      <div class="col-12 col-sm-auto">
+        <div class="tax-switch">
+          <div class="form-check-reverse form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Display Taxes</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if (search) { %>
+    <h5 class="text-center mt-3">Results for "<%= search %>"</h5>
     <% } %>
+
+    <div class="row">
+      <% if(listings.length === 0) {%>
+        <div class="col-12">
+          <p class="text-center fw-bold">No Listings found for "<%= search %>"</p>
+        </div>
+      <% } %>
+      <% for(let listing of listings) { %>
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+          <a href="/listings/<%= listing._id %>" class="listing-link text-decoration-none">
+            <div class="card listing-card position-relative h-100">
+              <% if(listing.image) { %>
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+              <% } else { %>
+                <img src="https://images.unsplash.com/photo-1625505826533-5c80aca7d157?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGdvYXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60" class="card-img-top" alt="Default image">
+              <% } %>
+              <form action="/bookmarks/<%= listing._id %>" method="post" class="save-form">
+                <button type="submit" class="save-btn">
+                  <i class="<%= listing.bookmarked ? 'fa-solid' : 'fa-regular' %> fa-bookmark"></i>
+                </button>
+              </form>
+              <div class="card-body">
+                <h5 class="card-title"><%= listing.title %></h5>
+                <p class="card-text">
+                  <span class="fw-bold">&#8377; <%= listing.price.toLocaleString("en-IN") %> / night</span>
+                  <span class="tax-info">&nbsp;+18% GST</span>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% } %>
+    </div>
   </div>
 
   <script>
